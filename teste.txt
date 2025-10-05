@@ -1,0 +1,231 @@
+# Módulo 01: Características
+
+- Single-thread: usa apenas 1 núcleo do processador.
+- Baixo consumo computacional como: RAM e CPU
+- Escalável
+- Trabalha com muitas requisições simultâneas
+- Modelo de E/S não bloqueante (diversas aplicações e requisições de forma simultânea)
+- Melhores custos operacionais
+- Desvantagem: Em aplicações muito grande, pode ser mais lento do que outras tecnologias, visto que faz tudo em uma única thread.
+
+# Módulo 01: Fundamentos do Node.js
+
+Bem-vindo ao primeiro projeto do curso! O objetivo desta aula é construir uma aplicação Node.js do zero, utilizando o mínimo de dependências externas possível. Focaremos nos módulos e recursos nativos da plataforma para entender seus fundamentos.
+
+Ao final, teremos um projeto completo com persistência de dados e testes automatizados, explorando conceitos poderosos como *streaming*.
+
+## Seções
+
+1. [Configuração do Ambiente e Projeto](https://www.google.com/search?q=%231-configura%C3%A7%C3%A3o-do-ambiente-e-projeto)
+2. [O Arquivo `package.json`](https://www.google.com/search?q=%232-o-arquivo-packagejson)
+3. [Criando o Servidor HTTP](https://www.google.com/search?q=%233-criando-o-servidor-http)
+4. [Módulos no Node.js: CommonJS vs. ES Modules](https://www.google.com/search?q=%234-m%C3%B3dulos-no-nodejs-commonjs-vs-es-modules-esm)
+5. [Implementando o Servidor com o Módulo `http`](https://www.google.com/search?q=%235-implementando-o-servidor-com-o-m%C3%B3dulo-http)
+6. [Executando e Testando o Servidor](https://www.google.com/search?q=%236-executando-e-testando-o-servidor)
+
+---
+
+### 1. Configuração do Ambiente e Projeto
+
+Para começar, precisamos organizar nosso ambiente de desenvolvimento.
+
+- **Criando a Estrutura de Pastas:** É uma boa prática ter um diretório central para seus projetos. A sugestão da aula é:
+    1. Navegue até a pasta do seu usuário.
+    2. Crie um diretório principal (ex: `www`).
+    3. Dentro dele, crie um diretório para o projeto: `01-fundamentos-node.js`.
+- **Iniciando o Projeto Node.js:**
+    1. Abra a pasta do projeto no seu editor de código (como o VS Code).
+    2. Abra o terminal integrado.
+    3. Execute o seguinte comando para inicializar o projeto:
+        
+        `npm init -y`
+        
+    - **O que esse comando faz?** Ele cria o arquivo `package.json`, que é o coração de qualquer projeto Node.js.
+    - **Flag `y`:** Responde "sim" (yes) para todas as perguntas do `npm`, criando o arquivo de forma não interativa e com valores padrão.
+
+### 2. O Arquivo `package.json`
+
+Este arquivo é o manifesto do seu projeto. Suas principais funções são:
+
+- **Metadados:** Contém informações como nome, versão e descrição do projeto.
+- **Scripts:** Permite definir comandos para automatizar tarefas (ex: `start`, `test`).
+- **Dependências:** O mais importante para o futuro, ele lista todos os pacotes de terceiros (frameworks, bibliotecas) que seu projeto utiliza, junto com suas versões.
+
+### 3. Criando o Servidor HTTP
+
+- **Estrutura do Arquivo:**
+    - Crie uma pasta `src` (source) na raiz do projeto para organizar o código-fonte.
+    - Dentro de `src`, crie o arquivo principal da aplicação: `server.js`.
+    
+    > Nota: Em Node.js, é mais comum usar server.js em vez de index.js para o arquivo principal de um servidor, pois é um nome mais semântico para o contexto de back-end.
+    > 
+- **Entendendo o Ambiente Node.js:**
+    - O Node.js executa código JavaScript fora do navegador, no lado do servidor.
+    - Você pode executar qualquer código JavaScript padrão. Por exemplo:JavaScript
+        
+        `const a = 5;
+        const b = 5;
+        console.log(a + b); // Imprime 10 no terminal`
+        
+    - **Importante:** APIs exclusivas do navegador **NÃO** estão disponíveis no Node.js. Você não pode usar `window`, `document`, `document.querySelector`, etc.
+
+### 4. Módulos no Node.js: CommonJS vs. ES Modules (ESM)
+
+O Node.js possui um sistema de módulos para importar e exportar código entre arquivos.
+
+- **CommonJS (Padrão Antigo):**
+    - Utiliza a sintaxe `require()` para importar módulos.
+    - Era o padrão do Node.js por muitos anos.
+    - Exemplo: `const http = require('http');`
+- **ES Modules (Padrão Moderno):**
+    - Utiliza a sintaxe `import` e `export`.
+    - É o padrão oficial do JavaScript moderno.
+    - Exemplo: `import http from 'http';`
+- **Habilitando ES Modules no Projeto:**
+    - Por padrão, o Node.js ainda usa CommonJS. Para habilitar o suporte a ES Modules, adicione a seguinte linha ao seu `package.json`:
+        
+        `{
+          "name": "01-fundamentos-node.js",
+          "version": "1.0.0",
+          "description": "",
+          "main": "index.js",
+          "type": "module", // <--- Adicione esta linha
+          "scripts": {
+            "test": "echo \"Error: no test specified\" && exit 1"
+          },
+          "keywords": [],
+          "author": "",
+          "license": "ISC"
+        }`
+        
+- **Importando Módulos Nativos:**
+    - Com as versões mais recentes do Node.js, é uma boa prática usar o prefixo `node:` para importar módulos internos. Isso deixa explícito que o módulo é nativo da plataforma e não um pacote de terceiros.
+        
+        `import http from 'node:http'; // Forma recomendada`
+        
+
+### 5. Implementando o Servidor com o Módulo `http`
+
+Agora, vamos usar o módulo `http` nativo para criar nosso primeiro servidor.
+
+- **Código Completo (`src/server.js`):**
+    
+    `// Importa o módulo HTTP nativo do Node.js
+    import http from 'node:http';
+    
+    // Cria uma instância do servidor HTTP
+    const server = http.createServer((request, response) => {
+      // O 'request' (req) contém dados da requisição (ex: URL, método, corpo da mensagem).
+      // O 'response' (res) é usado para enviar uma resposta de volta ao cliente.
+    
+      // Define o cabeçalho da resposta para indicar que o conteúdo é texto plano
+      response.writeHead(200, { 'Content-Type': 'text/plain' });
+    
+      // Finaliza a resposta, enviando o conteúdo 'Hello World' para o cliente
+      return response.end('Hello World');
+    });
+    
+    // Inicia o servidor e o faz "ouvir" por requisições na porta 3333
+    server.listen(3333, () => {
+      console.log('🚀 Server is running on http://localhost:3333');
+    });`
+    
+    > Observação: Na aula, o instrutor menciona res.send(), que é um método comum em frameworks como o Express.js. No módulo http nativo do Node, o método correto para finalizar e enviar a resposta é response.end().
+    > 
+- **Análise do Código:**
+    - `http.createServer()`: Cria o servidor. Ele recebe uma função de *callback* que será executada para **cada** requisição recebida.
+    - `request` (ou `req`): Um objeto que contém todas as informações da requisição feita pelo cliente (método HTTP, URL, cabeçalhos, etc.).
+    - `response` (ou `res`): Um objeto usado para construir e enviar a resposta de volta ao cliente.
+    - `server.listen(3333)`: Inicia o servidor na porta `3333` da sua máquina (`localhost`). O processo Node.js ficará ativo, aguardando por conexões.
+
+### 6. Executando e Testando o Servidor
+
+- **Iniciando o Servidor:**
+    - No terminal, execute o seguinte comando a partir da raiz do projeto:Bash
+        
+        `node src/server.js`
+        
+    - O terminal exibirá a mensagem "🚀 Server is running..." e ficará "travado". Isso é o comportamento esperado, pois o servidor está em execução.
+- **Testando a Aplicação:**
+    - **Via Navegador:** Abra seu navegador e acesse a URL `http://localhost:3333`. Você deverá ver a mensagem "Hello World" na tela.
+    - **Via Linha de Comando:** Você pode usar ferramentas como `curl` ou `httpie` (mencionado na aula) para fazer requisições HTTP pelo terminal.Bash
+        
+        `# Usando a ferramenta httpie
+        http localhost:3333`
+        
+    - O resultado no terminal mostrará o status da resposta (HTTP/1.1 200 OK), os cabeçalhos e o corpo ("Hello World").
+
+---
+
+# Guia: Reiniciando o Servidor Automaticamente (Hot Reload)
+
+Este guia aborda uma melhoria essencial no fluxo de desenvolvimento em Node.js: a reinicialização automática do servidor após alterações no código. Isso evita o processo manual e repetitivo de parar e iniciar o servidor a cada nova modificação, tornando o desenvolvimento muito mais ágil.
+
+## Seções
+
+1. [O Problema: Reinício Manual do Servidor](https://www.google.com/search?q=%231-o-problema-rein%C3%ADcio-manual-do-servidor)
+2. [A Solução Nativa: O Modo `-watch`](https://www.google.com/search?q=%232-a-solu%C3%A7%C3%A3o-nativa-o-modo---watch)
+3. [Automatizando o Processo com `npm scripts`](https://www.google.com/search?q=%233-automatizando-o-processo-com-npm-scripts)
+
+---
+
+### 1. O Problema: Reinício Manual do Servidor
+
+Por padrão, quando iniciamos um servidor com Node.js, ele carrega o código do arquivo em memória e o executa continuamente.
+
+- **Comando Padrão:**Bash
+    
+    `node src/server.js`
+    
+- **Comportamento:** Se você alterar qualquer parte do código (por exemplo, mudar o texto de "Hello World" para "Hello Ignite") e salvar o arquivo, a alteração **não será refletida** no servidor que já está em execução.
+- **O Fluxo de Trabalho Manual (e ineficiente):**
+    1. Voltar ao terminal.
+    2. Parar o servidor em execução (com `Ctrl + C`).
+    3. Executar o comando `node src/server.js` novamente para iniciar o servidor com o código atualizado.
+
+Este ciclo manual é lento e prejudica a produtividade.
+
+### 2. A Solução Nativa: O Modo `-watch`
+
+Versões mais recentes do Node.js introduziram uma solução nativa para este problema, eliminando a necessidade de bibliotecas externas (como o `nodemon`) para essa finalidade.
+
+A solução é a flag `--watch`.
+
+- **Como Usar:**
+Execute o servidor com o seguinte comando:Bash
+    
+    `node --watch src/server.js`
+    
+- **O que ele faz?**
+O Node.js passa a "observar" (`watch`) o arquivo `src/server.js` (e suas dependências). Toda vez que você salva uma alteração nesse arquivo, o Node automaticamente reinicia o servidor para você.
+
+> Nota: Ao executar pela primeira vez, você pode ver um aviso de que a funcionalidade --watch é experimental. No entanto, ela é considerada estável e pode ser usada com segurança para desenvolvimento.
+> 
+
+### 3. Automatizando o Processo com `npm scripts`
+
+O comando `node --watch src/server.js` é eficaz, mas um pouco longo para digitar repetidamente. Podemos criar um "atalho" (ou alias) para ele usando os `npm scripts` no nosso arquivo `package.json`.
+
+1. **Abra o arquivo `package.json`**.
+2. **Encontre a seção `"scripts"`**.
+3. **Crie um novo script**, por exemplo, `"dev"`, e coloque o comando completo como seu valor.
+- **Exemplo de `package.json`:**JSON
+    
+    `{
+      "name": "01-fundamentos-node.js",
+      "version": "1.0.0",
+      "type": "module",
+      "description": "",
+      "main": "index.js",
+      "scripts": {
+        "dev": "node --watch src/server.js"
+      },
+      "keywords": [],
+      "author": "",
+      "license": "ISC"
+    }`
+    
+1. **Como Executar o Script:**
+Agora, para iniciar o servidor em modo de observação, basta executar um comando muito mais simples e fácil de lembrar no terminal:Bash
+    
+    `npm run dev`
