@@ -11,6 +11,8 @@
     ],
     "module": "nodenext",
     "target": "es2022",
+    "allowImportingTsExtensions": true,
+    "noEmit": true, // não vou usar meu código para converter 
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
