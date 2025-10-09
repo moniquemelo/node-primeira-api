@@ -2,7 +2,7 @@ POST  http://localhost:3333/courses
 Content-Type: application/json
 
 {
-    "title": "Curso de Drizzle ORM"
+    "title": "Curso de React"
 }
 
 ###
@@ -11,4 +11,10 @@ GET http://localhost:3333/courses
 
 ###
 
+GET http://localhost:3333/courses?search=react
+###
+
+GET http://localhost:3333/courses?orderBy=title&page=2
+
+###
 GET http://localhost:3333/courses/bc72cf30-d42b-4b36-b938-474e9ffecc14
