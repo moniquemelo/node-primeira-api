@@ -2,11 +2,11 @@ import fastify from 'fastify'
 import { validatorCompiler, serializerCompiler, type ZodTypeProvider, jsonSchemaTransform } from 'fastify-type-provider-zod'
 import { fastifySwagger } from '@fastify/swagger'
 import scalarAPIReference from '@scalar/fastify-api-reference'
-import { createCourseRoute } from './src/routes/create-course.ts'
-import { getCoursesRoute } from './src/routes/get-courses.ts'
-import { getCourseByIdRoute } from './src/routes/get-course-by-id.ts'
+import { createCourseRoute } from './routes/create-course.ts'
+import { getCoursesRoute } from './routes/get-courses.ts'
+import { getCourseByIdRoute } from './routes/get-course-by-id.ts'
 
-const server = fastify({
+export const server = fastify({
     logger: {
         transport: {
             target: 'pino-pretty',
@@ -44,14 +44,4 @@ server.setValidatorCompiler(validatorCompiler)
 server.register(createCourseRoute)
 server.register(getCoursesRoute)
 server.register(getCourseByIdRoute)
-
-
-
-server.listen({ port: 3333 }).then(() => {
-    console.log('HTTP is running!')
-})
-
-
-// Para eu enviar uma imagem como JSON, eu teria que enviar um base64, porém acaba ficando muito grande, logo não é uma boa pratica,
-// o ideal é mandar como multipart/form-data
 
