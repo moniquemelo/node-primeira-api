@@ -7,7 +7,7 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:3333/courses
+GET http://localhost:3333/courses/016d628b-733b-4210-a75b-3d5cc3850dca
 
 ###
 
@@ -18,3 +18,12 @@ GET http://localhost:3333/courses?orderBy=title&page=2
 
 ###
 GET http://localhost:3333/courses/bc72cf30-d42b-4b36-b938-474e9ffecc14
+
+###
+POST  http://localhost:3333/sessions
+Content-Type: application/json
+
+{
+    "email": "Aline_Nogueira@live.com",
+    "password": "123456"
+}
