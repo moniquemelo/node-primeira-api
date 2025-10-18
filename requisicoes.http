@@ -7,6 +7,16 @@ Content-Type: application/json
 
 ###
 
+POST  http://localhost:3333/courses
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4MjlmOGJlNi00N2FjLTQ5MTQtYTk5YS0wMWExNTlmMmM5MmQiLCJyb2xlIjoibWFuYWdlciIsImlhdCI6MTc2MDc1ODg3NH0.R78YYNYK60BFi7a0xft2JulibAuakawfJpJ983GoH2w
+
+{
+    "title": "Curso de Typescript"
+}
+
+###
+
 GET http://localhost:3333/courses/016d628b-733b-4210-a75b-3d5cc3850dca
 
 ###
@@ -17,7 +27,8 @@ GET http://localhost:3333/courses?search=react
 GET http://localhost:3333/courses?orderBy=title&page=2
 
 ###
-GET http://localhost:3333/courses/bc72cf30-d42b-4b36-b938-474e9ffecc14
+GET http://localhost:3333/courses/c22bb1a8-038f-48a1-baae-bb10020ce82e
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4MjlmOGJlNi00N2FjLTQ5MTQtYTk5YS0wMWExNTlmMmM5MmQiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc2MDczOTA2Nn0.sLRyCV5Ps123Hjlg_FmLTtE0xB9NvV33DMQ5qurU4eA
 
 ###
 POST  http://localhost:3333/sessions
@@ -27,3 +38,7 @@ Content-Type: application/json
     "email": "Aline_Nogueira@live.com",
     "password": "123456"
 }
+
+
+
+

@@ -4,6 +4,7 @@ import { users } from '../database/schema.ts'
 import { eq } from 'drizzle-orm'
 import z from 'zod'
 import { verify } from 'argon2'
+import jwt from 'jsonwebtoken'
 
 
 export const loginRoute: FastifyPluginAsyncZod = async (server) => {
@@ -15,9 +16,10 @@ export const loginRoute: FastifyPluginAsyncZod = async (server) => {
                 email: z.email(),
                 password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
             }),
-            // response: {
-            //     201: z.object({ courseId: z.uuid() }).describe('Curso criado com sucesso!'),
-            // }
+            response: {
+                200: z.object({ token: z.string() }),
+                400: z.object({ message: z.string() }),
+            }
         },
     }, async (request, reply) => {
 
@@ -39,7 +41,14 @@ export const loginRoute: FastifyPluginAsyncZod = async (server) => {
           return reply.status(400).send({ message: 'Credenciais inválidas' })
         }
 
-        return reply.status(200).send({ message: 'Login realizado com sucesso.' })
+        if (!process.env.JWT_SECRET) {
+          throw new Error('JWT_SECRET não está definido nas variáveis de ambiente.')
+        }
+
+        // Subject => quem é o usuário
+        const token = jwt.sign({ sub: user.id, role: user.role }, process.env.JWT_SECRET!)
+
+        return reply.status(200).send({ token })
     })
 
 }
